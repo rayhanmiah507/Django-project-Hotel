@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{%  block start %}
+
+<div class="container mt-5 pt-5">
+  
+    <div class="row search-card-result">
+                
+
+                    
+    {% for hotel_image in hotel_images|slice:":1" %}   
+    <div class="col-md-3">
+        <a href="{% url 'hotel_detail' uid=hotel_image.hotels.uid %}">
+            <img class="img-fluid" src="{{ hotel_image.image.url }}" alt="">
+        </a>
+    </div>
+ 
+  
+        <div class="col-md-5">
+            <h5>{{hotel_image.hotels.hotel_name}}</h5>
+            
+            <p>
+                {{hotel_image.hotels.description}}
+            </p>
+            <p>
+                {% for amenitie in hotel.amenities.all %}
+                    <b>{{ amenitie.amenities_name }}</b>
+                {% endfor %}
+            </p>
+            
+        </div>
+        <div class="col-md-2 border-left text-center more-offers">
+            
+            <p>Place.com</p>
+            <p>${{ hotel_image.hotels.hotel_price }}</p>
+            <p>Room count</p>
+            <p>{{hotel_image.hotels.room_count}}</p>
+        </div>
+
+       <div class="col-md-2 border-left text-center more-offers">
+                <a href="{% url 'hotel_detail' uid=hotel_image.hotels.uid %}" class="btn btn-success">View deal</a>
+     </div>
+
+        {% endfor %}
+    </div>
+  
+    <div class="row">
+        {% for img in hotel_images %}
+            <div class="col-md-3">
+                <div class="image-container">
+                    <img src="{{ img.image.url }}" alt="Hotel Image" class="hotel-image">
+                    <div class="overlay">
+                        <img src="{{ img.image.url }}" style="height: 250px ; width:500px">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    {% if request.user.is_authenticated %}
+
+    <div class="filter-card">
+        <h5>Book Hotel</h5>
+        {%include "messages.html"%}
+        <form method="post">
+            {% csrf_token %}
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label for="mintopay">Check in</label>
+                    <p>
+                        <input type="date" name="checkin" id="checkin" class="form-control">
+                    </p>
+                </div>
+                <div class="col-md-12">
+                    <label for="maxtopay">Check out</label>
+                    <p>
+                        <input type="date" name="checkout" id="checkout" class="form-control">
+                    </p>
+                </div>
+            </div>
+           
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-primary btn-block" value="Book">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% else %}
+
+    <a href="/login/" class="btn btn-primary mt-5 ">Login</a>
+    {% endif %}
+</div>
+
+{% endblock %}
